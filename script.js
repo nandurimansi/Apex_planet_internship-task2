@@ -1,61 +1,25 @@
-const taskInput = document.getElementById("taskInput");
-const taskList = document.getElementById("taskList");
-const pendingCount = document.getElementById("pendingCount");
-const completedCount = document.getElementById("completedCount");
-const totalCount = document.getElementById("totalCount");
-const addBtn = document.getElementById("addBtn");
+document.getElementById("contactForm").addEventListener("submit", function(event) {
+    event.preventDefault();
 
-// Add task
-addBtn.addEventListener("click", () => {
-  let text = taskInput.value.trim();
-  if (text === "") {
-    alert("Please enter a task");
-    return;
-  }
+    let name = document.getElementById("name").value.trim();
+    let email = document.getElementById("email").value.trim();
+    let message = document.getElementById("message").value.trim();
+    let errorMsg = document.getElementById("errorMsg");
 
-  let li = document.createElement("li");
+    // Email validation pattern
+    let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  // Task text
-  let span = document.createElement("span");
-  span.textContent = text;
+    if (name === "" || email === "" || message === "") {
+        errorMsg.textContent = "All fields are required.";
+        return;
+    }
 
-  // Checkbox for completion
-  let checkbox = document.createElement("input");
-  checkbox.type = "checkbox";
-  checkbox.addEventListener("change", () => {
-    li.classList.toggle("completed");
-    updateStats();
-  });
+    if (!emailPattern.test(email)) {
+        errorMsg.textContent = "Please enter a valid email.";
+        errorMsg.style.color = "red";
+        return;
+    }
 
-  // 🗑️ Delete button
-  let delBtn = document.createElement("span");
-  delBtn.textContent = "🗑️";
-  delBtn.classList.add("delete-btn");
-  delBtn.addEventListener("click", () => {
-    li.remove();
-    updateStats();
-  });
-
-  // Order: text, checkbox, trash
-  li.appendChild(span);
-  li.appendChild(checkbox);
-  li.appendChild(delBtn);
-
-  taskList.appendChild(li);
-  taskInput.value = "";
-  updateStats();
+    errorMsg.style.color = "green";
+    errorMsg.textContent = "Form submitted successfully!";
 });
-
-// Update counts
-function updateStats() {
-  const total = taskList.children.length;
-  const completed = taskList.querySelectorAll(".completed").length;
-  const pending = total - completed;
-
-  totalCount.textContent = total;
-  completedCount.textContent = completed;
-  pendingCount.textContent = pending;
-}
-updateStats();
-
-
